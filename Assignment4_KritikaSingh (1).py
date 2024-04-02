@@ -1,22 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# ******
-
-# <body style = "backgroud-color-lemon:">
-# 
-# <h1 style = "text-align:Center ; "> Assignment 4</h1>
-# <h2 style = "text-align:center ; "> Name of the student: Kritika Singh</h2>
-# <h3 style = "text-align:Center ; "> Student_Id-2156104</h3>
-# <h4 style = "text-align:Center ; "> CS- 6304---DeepLearning</h4>
-#     
-# </body>
-
-# ***
-
 # ### Import the libraries and load the training and testing data and training and testing labels
-
-# In[1]:
 
 
 from sklearn.model_selection import train_test_split
@@ -24,7 +9,7 @@ import os
 import numpy as np
 import pandas as pd
 
-data_dir = 'C:/Users/Mohith/Downloads/Assignment4'
+data_dir = 'Assignment4'
 
 
 #subject_data = np.loadtxt(f'{data_dir}/train/subject_train.txt')
@@ -43,33 +28,22 @@ test_data[:,:,3] = pd.read_csv('C:/Users/Mohith/Downloads/Assignment4/test_2/Glu
 
 
 # labels
-train_labels = np.loadtxt('C:/Users/Mohith/Downloads/Assignment4/y_train.csv', delimiter=',')
+train_labels = np.loadtxt('Assignment4/y_train.csv', delimiter=',')
 train_labels -= np.min(train_labels)
-test_labels = np.loadtxt('C:/Users/Mohith/Downloads/Assignment4/y_test.csv', delimiter=',')
+test_labels = np.loadtxt('Assignment4/y_test.csv', delimiter=',')
 test_labels -= np.min(test_labels )
-
-
-# In[2]:
 
 
 train_data.shape
 
 
-# In[3]:
-
-
 test_data.shape
-
-
-# In[4]:
 
 
 train_labels
 
 
 # ### Convert to categorical class labels of multiclass classification
-
-# In[5]:
 
 
 from keras.utils import np_utils
@@ -86,16 +60,10 @@ print(y_test.shape)
 
 # ### Defining Hyperparameter
 
-# In[6]:
-
-
 from hyperopt import fmin, tpe, hp, STATUS_OK, Trials
 from hyperopt.pyll.base import scope
 from sklearn.metrics import roc_auc_score
 from functools import partial
-
-
-# In[7]:
 
 
 cnn_space = {
@@ -112,9 +80,6 @@ cnn_space = {
 # The function then initializes a Sequential model, adds a Conv1D layer with the number of kernels and kernel size specified in the params dictionary, followed by a Dropout layer, a MaxPooling1D layer with window size 4 and stride 1, another Dropout layer, and a Flatten layer. Finally, it adds a Dense output layer with one node and sigmoid activation. The loss function is binary cross-entropy and the optimizer is specified in the params dictionary. The model is compiled, and then trained on the input data x_train and y_train for 100 epochs, with early stopping criteria of patience = 3.
 # 
 # After training, the function finds the validation loss of the trained model and returns a dictionary containing the validation loss, a status code indicating the status of the optimization (STATUS_OK indicates successful optimization), and the trained model itself. This function is intended to be used with hyperparameter optimization algorithms such as Hyperopt to search for the best combination of hyperparameters that minimizes the validation loss of the CNN model.
-
-# In[10]:
-
 
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Flatten, Conv1D, MaxPooling1D, Dropout, Activation, BatchNormalization
@@ -148,8 +113,6 @@ def cnn2_model(params,x_train,y_train):
 # 
 # The best set of hyperparameters found by the search is returned as a dictionary, which is printed out by the print statement.
 
-# In[11]:
-
 
 trials =Trials()
 best_model = fmin(partial(cnn2_model,x_train=train_data,y_train=y_train),cnn_space,algo=tpe.suggest,max_evals=10,trials=trials)
@@ -162,15 +125,11 @@ print(best_model)
 # 
 # The indexing [0] at the end selects the first trial in the list, which is returned as an object that can be further analyzed or used to extract information such as the best hyperparameters found during the optimization.
 
-# In[12]:
-
 
 [trial for trial in trials][0]
 
 
 # This function(getBestModelfromTrials) is used to extract the best model obtained from the hyperparameter optimization trials and save it for future use
-
-# In[13]:
 
 
 def getBestModelfromTrials(trials,modelname):
@@ -195,16 +154,10 @@ def getBestModelfromTrials(trials,modelname):
     return best_trial_obj['result']['Trained_Model']
 
 
-# In[14]:
-
-
 model = getBestModelfromTrials(trials,'hyperopt_model')
 
 
 # This function takes in a trained model, test data, and test class labels as input. It then uses the trained model to make predictions on the test data and calculates the accuracy of the predictions by comparing the predicted class labels with the actual class labels. The accuracy is calculated using the accuracy_score function from the scikit-learn library. Finally, the function prints the testing accuracy.
-
-# In[15]:
-
 
 from sklearn.metrics import accuracy_score
 def GetAccuracy(model,test_data,test_class):
@@ -214,16 +167,10 @@ def GetAccuracy(model,test_data,test_class):
     print('testing accuracy',accuracy_score(y_classes,pred_classes))    
 
 
-# In[16]:
-
-
 GetAccuracy(model,test_data,y_test)
 
 
 # This code is loading a trained model from a JSON file and its corresponding weight from an H5 file, creating a Keras model object from the JSON file and loading the weights into it. Finally, it is calling the GetAccuracy function to evaluate the accuracy of the loaded model on the test dataset.
-
-# In[17]:
-
 
 from tensorflow.keras.models import model_from_json
 f = open('hyperopt_model.json','r')
@@ -234,23 +181,12 @@ model_.load_weights("hyperopt_model.h5")
 GetAccuracy(model_,test_data,y_test)
 
 
-# In[18]:
-
-
 trials1 =Trials()
 best_model = fmin(partial(cnn2_model,x_train=train_data,y_train=y_train),cnn_space,algo=tpe.suggest,max_evals=50,trials=trials1)
 print(best_model)
 
-
-# In[19]:
-
-
 model = getBestModelfromTrials(trials1,'hyperopt_model_new')
 GetAccuracy(model,test_data,y_test)
-
-
-# In[20]:
-
 
 from hyperopt import fmin, tpe, hp, STATUS_OK, Trials
 from hyperopt.pyll.base import scope
@@ -300,8 +236,6 @@ plt.show()
 
 # Each subplot shows a histogram of the random numbers with a varying number of bins (100 for the uniform distribution and 200 for the log-uniform distribution with quantization). The density=True parameter indicates that the histogram is normalized, and histtype='stepfilled' and alpha=0.2 set the style of the histogram bars. 
 
-# In[22]:
-
 
 fig, ax = plt.subplots(1, 4,figsize=(15, 5))
 
@@ -330,9 +264,6 @@ ax[3].hist(rv3, density=True, histtype='stepfilled', alpha=0.2,bins=200)
 ax[3].set_title("low=3,high=6,q=8,qloguniform")
 
 plt.show()
-
-
-# In[ ]:
 
 
 
