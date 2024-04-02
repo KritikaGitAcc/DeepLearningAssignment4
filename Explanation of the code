@@ -1,0 +1,11 @@
+This Python code is plotting histograms of random numbers generated from different distributions using the Matplotlib library. It demonstrates the effects of using uniform and log-uniform distributions, as well as quantization levels, on the distribution of random numbers.
+
+The first set of histograms shows random numbers generated from a uniform distribution with parameters low and high. The histogram is created with 100 bins.
+
+The second to fourth sets of histograms show random numbers generated from a quantized uniform distribution (quniform) with different quantization levels (q=2, q=4, q=6). As the quantization level increases, the distribution becomes more discrete.
+
+The fifth histogram set shows random numbers generated from a log-uniform distribution with parameters low and high.
+
+The subsequent histograms demonstrate the effect of quantization levels (q=2, q=6, q=8) on the log-uniform distribution. As the quantization level increases, the distribution becomes more discrete.
+
+These histograms visually represent the distribution of random numbers generated from different distributions and the impact of quantization levels on the distribution's granularity.
